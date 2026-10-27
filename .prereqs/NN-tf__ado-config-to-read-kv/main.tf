@@ -61,7 +61,7 @@ module "ado_022_preapproved_pipeline_ids" {
   ado_pipeline_names = var.ado_preapproved_pipeline_names
 }
 
-# ----------- ADO configure the nonprod service connection ------------
+# ----------- ADO configure the nonprod service connection and variable group ------------
 module "ado_042_ado_sc_nonprod" {
   depends_on = [module.ado_014_gatekeepers_group_id, module.ado_022_preapproved_pipeline_ids]
   source     = "./modules/042_ado_sc_configurations"
@@ -78,8 +78,25 @@ module "ado_042_ado_sc_nonprod" {
   # Note:  In the real world, maybe the pipelines using nonprod vs. prod differ.
   permitted_pipeline_ids_by_name = module.ado_022_preapproved_pipeline_ids.ado_pipeline_ids_by_name
 }
+module "ado_052_ado_vg_nonprod" {
+  depends_on = [module.ado_042_ado_sc_nonprod]
+  source     = "./modules/052_ado_vg_configurations"
+  providers = {
+    azuredevops = azuredevops.demo
+  }
+  ado_project_id = data.azuredevops_project.the_ado_project.id
+  # I don't think the fact that I was too lazy to actually create any key vaults yet 
+  # is going to bite me until I leave plan mode...
+  az_kv_name                = "TODO"
+  env_nickname              = "nonprod"
+  ado_service_connection_id = module.ado_042_ado_sc_nonprod.ado_service_connection_id
+  # Note:  In the real world, maybe we'd have different nonprod vs. prod approvers.
+  gatekeepers_group_id = module.ado_014_gatekeepers_group_id.ado_id_for_entra_group
+  # Note:  In the real world, maybe the pipelines using nonprod vs. prod differ.
+  permitted_pipeline_ids_by_name = module.ado_022_preapproved_pipeline_ids.ado_pipeline_ids_by_name
+}
 
-# ----------- ADO configure the prod service connection ------------
+# ----------- ADO configure the prod service connection and variable group ------------
 module "ado_042_ado_sc_prod" {
   depends_on = [module.ado_014_gatekeepers_group_id, module.ado_022_preapproved_pipeline_ids]
   source     = "./modules/042_ado_sc_configurations"
@@ -94,5 +111,22 @@ module "ado_042_ado_sc_prod" {
   # Note:  In the real world, maybe we'd have different nonprod vs. prod approvers.
   gatekeepers_group_id = module.ado_014_gatekeepers_group_id.ado_id_for_entra_group
   # Note:  In the real world, maybe the pipelines using nonprod vs. prod differ.
+  permitted_pipeline_ids_by_name = module.ado_022_preapproved_pipeline_ids.ado_pipeline_ids_by_name
+}
+module "ado_052_ado_vg_prod" {
+  depends_on = [module.ado_042_ado_sc_prod]
+  source     = "./modules/052_ado_vg_configurations"
+  providers = {
+    azuredevops = azuredevops.demo
+  }
+  ado_project_id = data.azuredevops_project.the_ado_project.id
+  # I don't think the fact that I was too lazy to actually create any key vaults yet 
+  # is going to bite me until I leave plan mode...
+  az_kv_name                = "TODO"
+  env_nickname              = "prod"
+  ado_service_connection_id = module.ado_042_ado_sc_prod.ado_service_connection_id
+  # Note:  In the real world, maybe we'd have different prod vs. prod approvers.
+  gatekeepers_group_id = module.ado_014_gatekeepers_group_id.ado_id_for_entra_group
+  # Note:  In the real world, maybe the pipelines using prod vs. prod differ.
   permitted_pipeline_ids_by_name = module.ado_022_preapproved_pipeline_ids.ado_pipeline_ids_by_name
 }

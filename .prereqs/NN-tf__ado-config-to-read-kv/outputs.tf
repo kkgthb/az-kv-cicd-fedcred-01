@@ -41,13 +41,25 @@ output "entra_nonprod_federated_identity_credential_id" {
 output "entra_nonprod_federated_identity_credential_display_name" {
   value = module.ado_042_ado_sc_nonprod.entra_federated_identity_credential_display_name
 }
-output "ado_nonprod_check_approval_id" {
+output "ado_nonprod_sc_check_approval_id" {
   value = module.ado_042_ado_sc_nonprod.ado_check_approval_id
 }
-output "ado_nonprod_pipeline_authorization_ids_by_pipeline_name" {
+output "ado_nonprod_sc_pipeline_authorization_ids_by_pipeline_name" {
   value = module.ado_042_ado_sc_nonprod.ado_pipeline_authorization_ids_by_pipeline_name
 }
 
+output "ado_nonprod_variable_group_id" {
+  value = module.ado_052_ado_vg_nonprod.ado_variable_group_id
+}
+output "ado_nonprod_variable_group_name" {
+  value = module.ado_052_ado_vg_nonprod.ado_variable_group_name
+}
+output "ado_nonprod_vg_check_approval_id" {
+  value = module.ado_052_ado_vg_nonprod.ado_check_approval_id
+}
+output "ado_nonprod_vg_pipeline_authorization_ids_by_pipeline_name" {
+  value = module.ado_052_ado_vg_nonprod.ado_pipeline_authorization_ids_by_pipeline_name
+}
 
 output "ado_prod_service_connection_id" {
   value = module.ado_042_ado_sc_prod.ado_service_connection_id
@@ -61,9 +73,22 @@ output "entra_prod_federated_identity_credential_id" {
 output "entra_prod_federated_identity_credential_display_name" {
   value = module.ado_042_ado_sc_prod.entra_federated_identity_credential_display_name
 }
-output "ado_prod_check_approval_id" {
+output "ado_prod_sc_check_approval_id" {
   value = module.ado_042_ado_sc_prod.ado_check_approval_id
 }
-output "ado_prod_pipeline_authorization_ids_by_pipeline_name" {
+output "ado_prod_sc_pipeline_authorization_ids_by_pipeline_name" {
   value = module.ado_042_ado_sc_prod.ado_pipeline_authorization_ids_by_pipeline_name
+}
+
+output "ado_prod_variable_group_id" {
+  value = module.ado_052_ado_vg_prod.ado_variable_group_id
+}
+output "ado_prod_variable_group_name" {
+  value = module.ado_052_ado_vg_prod.ado_variable_group_name
+}
+output "ado_prod_vg_check_approval_id" {
+  value = module.ado_052_ado_vg_prod.ado_check_approval_id
+}
+output "ado_prod_vg_pipeline_authorization_ids_by_pipeline_name" {
+  value = module.ado_052_ado_vg_prod.ado_pipeline_authorization_ids_by_pipeline_name
 }

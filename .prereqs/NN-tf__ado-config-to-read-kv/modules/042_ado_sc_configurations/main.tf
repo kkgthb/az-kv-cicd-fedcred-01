@@ -52,7 +52,7 @@ resource "azuredevops_check_approval" "ado_chkaprv_sc" {
 
 resource "azuredevops_pipeline_authorization" "ado_pipeauth_sc" {
   # For the specified pipelines, this ensures no one has to approve 
-  # using this pool on the specified YAML pipeline's first run.
+  # using this service connection on the specified YAML pipeline's first run.
   # (Note:  the runner of this Terraform code must have appropriate privileges against that specific 
   # ADO service connection resource, just like manual button-clickers would need.)
   for_each    = var.permitted_pipeline_ids_by_name
