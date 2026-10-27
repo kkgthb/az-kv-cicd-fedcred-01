@@ -60,3 +60,39 @@ module "ado_022_preapproved_pipeline_ids" {
   ado_project_id     = data.azuredevops_project.the_ado_project.id
   ado_pipeline_names = var.ado_preapproved_pipeline_names
 }
+
+# ----------- ADO configure the nonprod service connection ------------
+module "ado_042_ado_sc_nonprod" {
+  depends_on = [module.ado_014_gatekeepers_group_id, module.ado_022_preapproved_pipeline_ids]
+  source     = "./modules/042_ado_sc_configurations"
+  providers = {
+    azuread     = azuread.demo
+    azuredevops = azuredevops.demo
+    azurerm     = azurerm.demo_nonprod_az_subscription
+  }
+  ado_project_id        = data.azuredevops_project.the_ado_project.id
+  entra_sp_display_name = var.entra_kvsu_sp_display_name_nonprod
+  env_nickname          = "nonprod"
+  # Note:  In the real world, maybe we'd have different nonprod vs. prod approvers.
+  gatekeepers_group_id = module.ado_014_gatekeepers_group_id.ado_id_for_entra_group
+  # Note:  In the real world, maybe the pipelines using nonprod vs. prod differ.
+  permitted_pipeline_ids_by_name = module.ado_022_preapproved_pipeline_ids.ado_pipeline_ids_by_name
+}
+
+# ----------- ADO configure the prod service connection ------------
+module "ado_042_ado_sc_prod" {
+  depends_on = [module.ado_014_gatekeepers_group_id, module.ado_022_preapproved_pipeline_ids]
+  source     = "./modules/042_ado_sc_configurations"
+  providers = {
+    azuread     = azuread.demo
+    azuredevops = azuredevops.demo
+    azurerm     = azurerm.demo_prod_az_subscription
+  }
+  ado_project_id        = data.azuredevops_project.the_ado_project.id
+  entra_sp_display_name = var.entra_kvsu_sp_display_name_prod
+  env_nickname          = "prod"
+  # Note:  In the real world, maybe we'd have different nonprod vs. prod approvers.
+  gatekeepers_group_id = module.ado_014_gatekeepers_group_id.ado_id_for_entra_group
+  # Note:  In the real world, maybe the pipelines using nonprod vs. prod differ.
+  permitted_pipeline_ids_by_name = module.ado_022_preapproved_pipeline_ids.ado_pipeline_ids_by_name
+}
